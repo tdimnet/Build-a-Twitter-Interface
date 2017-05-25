@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/tdimnet/Build-a-Twitter-Interface/issues"
   },
-  "homepage": "https://github.com/tdimnet/Build-a-Twitter-Interface#readme"
+  "homepage": "https://github.com/tdimnet/Build-a-Twitter-Interface#readme",
+  "dependencies": {
+    "express": "^4.13.0",
+    "jade": "^1.11.0"
+  }
 }
