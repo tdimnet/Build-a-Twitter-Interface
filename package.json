@@ -18,6 +18,7 @@
   "homepage": "https://github.com/tdimnet/Build-a-Twitter-Interface#readme",
   "dependencies": {
     "express": "^4.13.0",
-    "jade": "^1.11.0"
+    "jade": "^1.11.0",
+    "twit": "^2.2.5"
   }
 }
