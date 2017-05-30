@@ -14,8 +14,9 @@ app.use(
 );
 
 function test() {
-  twit.get('https://api.twitter.com/1.1/search/tweets.json?q=%23superbowl&result_type=recent', function(err, data, response) {
-    console.log(data)
+  twit.get('https://api.twitter.com/1.1/followers/list.json?user_id=' + config.access_token + '', (err, data, res) => {
+    console.log(data);
+    // console.log(config.access_token)
   })
 }
 
