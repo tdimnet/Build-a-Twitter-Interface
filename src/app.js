@@ -24,12 +24,19 @@ const getProfilInfo = () => {
   })
 };
 
+// Retrieve the most recents friends
 const getRecentFriends = () => {
-  twit.get('followers/ids',  function (err, data, response) {
-    console.log(data)
+  twit.get('followers/list',  function (err, data, response) {
+    console.log(data.users)
   });
 }
 
+// Retrieve the most recents private messages
+const getRecentPrivateMessages = () => {
+  twit.get('direct_messages',  function (err, data, response) {
+    console.log(data.users)
+  });
+}
 
 
 app.set('view engine', 'jade');
@@ -41,5 +48,5 @@ app.get('/', (request, response) => {
 
 app.listen(3000, () => {
   console.log('The server is running on port 3000');
-  getProfilInfo()
+  getRecentPrivateMessages();
 });
