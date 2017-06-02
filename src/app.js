@@ -13,34 +13,19 @@ app.use(
   express.static(__dirname + '/public')
 );
 
-// Retrieve the five most recents friends
-function getFriendsList() {
-  twit.get('https://api.twitter.com/1.1/followers/list.json?user_id=' + config.access_token + '', (err, data, res) => {
-    const usersList = data.users.slice(0,5);
-    console.log(usersList, usersList.length);
+// Retrieve the profil info
+const getProfilInfo = () => {
+  twit.get('account/verify_credentials', { skip_status: true })
+  .catch(function (err) {
+    console.log('caught error', err.stack)
   })
-}
+  .then(function (result) {
 
-// Retrieve the five most recents tweets
-function getMostRecentTweets() {
-  twit.get('https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=713045356720873472', (err, data, res) => {
-    console.log(data);
-  });
-}
+    console.log('data', result.data);
+  })
+};
 
-// Retrieve the five most recents tweets (need to configure a new access token)
-function getDirectMessages() {
-  twit.get('https://api.twitter.com/1.1/direct_messages.json', (err, data, res) => {
-    console.log(data);
-  });
-}
 
-//https://dev.twitter.com/rest/reference/get/users/show => There is an error => I can not access the data with the only access token..
-function getImageProfil() {
-  twit.get('https://api.twitter.com/1.1/users/show.json?user_id=' + config.access_token + '', (err, data, res) => {
-    console.log(data);
-  });
-}
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/templates');
@@ -51,4 +36,5 @@ app.get('/', (request, response) => {
 
 app.listen(3000, () => {
   console.log('The server is running on port 3000');
+  getProfilInfo()
 });
