@@ -20,10 +20,15 @@ const getProfilInfo = () => {
     console.log('caught error', err.stack)
   })
   .then(function (result) {
-
     console.log('data', result.data);
   })
 };
+
+const getRecentFriends = () => {
+  twit.get('followers/ids',  function (err, data, response) {
+    console.log(data)
+  });
+}
 
 
 
