@@ -20,7 +20,10 @@ const getProfilInfo = () => {
     console.log('caught error', err.stack)
   })
   .then(function (result) {
-    console.log('data', result.data);
+    // console.log('data', result.data);
+    const profilName = result.data.screen_name;
+    const profilImg = result.data.profile_image_url;
+    console.log(profilName, profilImg);
   })
 };
 
@@ -48,5 +51,5 @@ app.get('/', (request, response) => {
 
 app.listen(3000, () => {
   console.log('The server is running on port 3000');
-  getRecentPrivateMessages();
+  getProfilInfo();
 });
