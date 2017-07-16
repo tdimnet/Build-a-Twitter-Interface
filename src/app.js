@@ -22,11 +22,18 @@ const recentFriends = function getRecentFriends() {
   });
 }
 
+const privateMessages = function getPrivateRecentMessages() {
+  twitter.get('direct_messages', { count: 5 }, function (err, data, response) {
+    console.log(data)
+  });
+}
+
 // Match the home route
 app.get('/', (req, res) => {
     res.render('index');
     // profilInfo();
-    recentFriends();
+    // recentFriends();
+    privateMessages();
 });
 
 // Start server and watch for changes
