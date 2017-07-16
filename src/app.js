@@ -1,9 +1,15 @@
+'use strict';
+
+// Import statements
 const express = require('express');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', __dirname + '/views');
+
 app.get('/', (req, res) => {
-    res.send('<h1>Hello the world</h1>');
+    res.render('index');
 });
 
 app.listen(3000, (
