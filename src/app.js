@@ -13,15 +13,20 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
 const profilInfo = function getProfilInfo() {
-  twitter.get('search/tweets', { q: 'banana since:2011-07-11', count: 100 }, function(err, data, response) {
-    console.log(data)
+  console.log('foo');
+}
+
+const recentFriends = function getRecentFriends() {
+  twitter.get('followers/list', { count: 5 }, (err, data, response) => {
+    console.log(data.users.length);
   });
 }
 
 // Match the home route
 app.get('/', (req, res) => {
     res.render('index');
-    profilInfo();
+    // profilInfo();
+    recentFriends();
 });
 
 // Start server and watch for changes
