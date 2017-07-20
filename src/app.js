@@ -12,29 +12,55 @@ const twitter = new Twit(config);
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
+
+
+
 const profilInfo = function getProfilInfo() {
-  console.log('foo');
+  twitter.get('account/verify_credentials', (err, data, response) => {
+    // console.log(data);
+  });
+}
+
+const recentTweets = function getRecentTweets() {
+  twitter.get('statuses/user_timeline', { count: 5 }, (err, data, response) => {
+    // console.log(data);
+  });
 }
 
 const recentFriends = function getRecentFriends() {
   twitter.get('followers/list', { count: 5 }, (err, data, response) => {
-    console.log(data.users.length);
+    // console.log(data);
   });
 }
 
 const privateMessages = function getPrivateRecentMessages() {
   twitter.get('direct_messages', { count: 5 }, function (err, data, response) {
-    console.log(data)
+    // console.log(data)
   });
 }
 
 // Match the home route
-app.get('/', (req, res) => {
-    res.render('index');
-    // profilInfo();
-    // recentFriends();
+app.get('/', (req, res, next) => {
+    console.log('Fetching profil info');
+    profilInfo();
+    next();
+  }, (req, res, next) => {
+    console.log('Fetching recent tweets');
+    recentTweets();
+    next();
+  }, (req, res, next) => {
+    console.log('Fetching recent friends');
+    recentFriends();
+    next();
+  }, (req, res, next) => {
+    console.log('Fetching private messages');
     privateMessages();
-});
+    next();
+  }, (req, res, next) => {
+    console.log('Displaying view');
+    res.render('index');
+  }
+);
 
 // Start server and watch for changes
 app.listen(3000, (
