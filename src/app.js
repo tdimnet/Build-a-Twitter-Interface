@@ -13,12 +13,9 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
 
-
-
 const profilInfo = function getProfilInfo() {
   twitter.get('account/verify_credentials', (err, data, response) => {
     // console.log(data);
-    const foo = data;
   });
 }
 
@@ -44,6 +41,7 @@ const privateMessages = function getPrivateRecentMessages() {
 // Match the home route
 app.get('/', (req, res, next) => {
     var twitData = {};
+    // For now, the first promise comes from here :)
     twitter.get('account/verify_credentials', { skip_status: true })
       .catch(err => {
         console.log('caught error', err.stack)
