@@ -18,6 +18,7 @@ app.set('views', __dirname + '/views');
 const profilInfo = function getProfilInfo() {
   twitter.get('account/verify_credentials', (err, data, response) => {
     // console.log(data);
+    const foo = data;
   });
 }
 
@@ -39,30 +40,30 @@ const privateMessages = function getPrivateRecentMessages() {
   });
 }
 
+
 // Match the home route
 app.get('/', (req, res, next) => {
-    console.log('Fetching profil info');
-    profilInfo();
-    next();
-  }, (req, res, next) => {
-    console.log('Fetching recent tweets');
-    recentTweets();
-    next();
-  }, (req, res, next) => {
-    console.log('Fetching recent friends');
-    recentFriends();
-    next();
-  }, (req, res, next) => {
-    console.log('Fetching private messages');
-    privateMessages();
-    next();
-  }, (req, res, next) => {
-    console.log('Displaying view');
-    res.render('index');
+    var twitData = {};
+    twitter.get('account/verify_credentials', { skip_status: true })
+      .catch(err => {
+        console.log('caught error', err.stack)
+      })
+      .then(result => result.data)
+      .then(data => {
+        return twitData = {
+          username: data.screen_name
+        }
+      })
+      .then(newData => {
+        console.log(newData);
+        res.render('index', { twitterData: newData });
+      })
   }
 );
 
+
+
 // Start server and watch for changes
 app.listen(3000, (
-    console.log('THe server is now running on port 3000')
+    console.log('The server is now running on port 3000')
 ));
