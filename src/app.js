@@ -26,9 +26,11 @@ const getProfil = function getProfilInfo(next) {
   twitter.get('account/verify_credentials', function(err, data, response) {
     const username = data.screen_name;
     const profilPicture = data.profile_image_url;
+    const followersCount = data.followers_count;
     const firstData = {
       username: username,
-      profilPicture: profilPicture
+      profilPicture: profilPicture,
+      followersCount: followersCount
     };
     next(null, firstData);
   })
