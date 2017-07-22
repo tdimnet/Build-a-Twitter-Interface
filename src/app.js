@@ -8,6 +8,13 @@ const config = require('./config.js');
 const app = express();
 const twitter = new Twit(config);
 
+
+// serve the static files
+app.use(
+  '/static',
+  express.static(__dirname + '/public')
+);
+
 // setter statements in order to show the templating files
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
