@@ -34,18 +34,21 @@ const getProfil = function getProfilInfo(next) {
   })
 }
 
+// Retrieve the five latest tweets of the user
 const recentTweets = function getRecentTweets() {
   twitter.get('statuses/user_timeline', { count: 5 }, (err, data, response) => {
     // console.log(data);
   });
 }
 
+// Take the five latests recent friends of the user
 const recentFriends = function getRecentFriends(next) {
   twitter.get('followers/list', { count: 5 }, (err, data, response) => {
     next(null, data.users)
   });
 }
 
+// Take the five latests private messages of the user
 const privateMessages = function getPrivateRecentMessages() {
   twitter.get('direct_messages', { count: 5 }, function (err, data, response) {
     // console.log(data)
@@ -60,18 +63,13 @@ app.get('/', (req, res) => {
     async.parallel(
       [
         getProfil,
-        recentFriends,
+        // recentFriends,
       ], function(err, results) {
-        // Accessing followers object this way = results[1].users[0]
         const profilData = results[0];
-        console.log(results[1]);
+        // console.log(results[1]);
         res.render('index', { profilData: profilData });
       }
     )
-
-
-
-
   }
 );
 
