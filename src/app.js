@@ -37,9 +37,11 @@ const getProfil = function getProfilInfo(next) {
 }
 
 // Retrieve the five latest tweets of the user
-const recentTweets = function getRecentTweets() {
+const recentTweets = function getRecentTweets(next) {
   twitter.get('statuses/user_timeline', { count: 5 }, (err, data, response) => {
     // console.log(data);
+    const TweetsData = data;
+    next(null, TweetsData);
   });
 }
 
@@ -65,11 +67,12 @@ app.get('/', (req, res) => {
     async.parallel(
       [
         getProfil,
+        recentTweets,
         // recentFriends,
       ], function(err, results) {
         const profilData = results[0];
-        // console.log(results[1]);
-        res.render('index', { profilData: profilData });
+        const TweetsData = results[1];
+        res.render('index', { profilData: profilData, TweetsData: TweetsData });
       }
     )
   }
