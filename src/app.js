@@ -21,11 +21,17 @@ app.set('view engine', 'pug');
 app.set('views', __dirname + '/views');
 
 
-const profilInfo = function getProfilInfo() {
-  const foo = twitter.get('account/verify_credentials', function(err, data, response) {
-    return data;
+// Take the username and profil picture of the declared user
+const getProfil = function getProfilInfo(next) {
+  twitter.get('account/verify_credentials', function(err, data, response) {
+    const username = data.screen_name;
+    const profilPicture = data.profile_image_url;
+    const firstData = {
+      username: username,
+      profilPicture: profilPicture
+    };
+    next(null, firstData);
   })
-  return foo;
 }
 
 const recentTweets = function getRecentTweets() {
@@ -34,9 +40,9 @@ const recentTweets = function getRecentTweets() {
   });
 }
 
-const recentFriends = function getRecentFriends() {
+const recentFriends = function getRecentFriends(next) {
   twitter.get('followers/list', { count: 5 }, (err, data, response) => {
-    // console.log(data);
+    next(null, data.users)
   });
 }
 
@@ -53,22 +59,13 @@ app.get('/', (req, res) => {
 
     async.parallel(
       [
-        function(next) {
-          twitter.get('account/verify_credentials', function(err, data, response) {
-            const firstData = data;
-            next(null, firstData)
-          })
-        },
-        function(next) {
-          twitter.get('followers/list', { count: 5 }, (err, data, response) => {
-            const secondData = data;
-            next(null, secondData)
-          });
-        }
+        getProfil,
+        recentFriends,
       ], function(err, results) {
         // Accessing followers object this way = results[1].users[0]
-        console.log(results[1].users[0]);
-        res.render('index');
+        const profilData = results[0];
+        console.log(results[1]);
+        res.render('index', { profilData: profilData });
       }
     )
 
