@@ -49,14 +49,14 @@ const recentTweets = function getRecentTweets(next) {
 const recentFriends = function getRecentFriends(next) {
   twitter.get('followers/list', { count: 5 }, (err, data, response) => {
     const friendsData = [];
-    for (var i = 0; i < data.users.length; i++) {
-      const friends = {
-        realName: data.users[i].name,
-        screenName: data.users[i].screen_name,
-        profilPicture: data.users[i].profile_image_url
-      }
-      friendsData.push(friends);
-    }
+    // for (var i = 0; i < data.users.length; i++) {
+    //   const friends = {
+    //     realName: data.users[i].name,
+    //     screenName: data.users[i].screen_name,
+    //     profilPicture: data.users[i].profile_image_url
+    //   }
+    //   friendsData.push(friends);
+    // }
     next(null, friendsData)
   });
 }
@@ -65,24 +65,24 @@ const recentFriends = function getRecentFriends(next) {
 const privateMessages = function getPrivateRecentMessages(next) {
   twitter.get('direct_messages', { count: 5 }, (err, data, response) => {
     const directMessagesData = [];
-    for (var i = 0; i < data.length; i++) {
-      // Date format
-      const dateSent = data[i].created_at.substr(0, 10);
-      const yearSent = data[i].created_at.substr(26, 30);
-      const fullDate = dateSent + ' ' + yearSent;
-
-      // Time format
-      const timeSent = data[i].created_at.substr(11, 9);
-
-      const message = {
-        text: data[i].text,
-        profilPictureSender: data[i].sender.profile_image_url,
-        fullDate: fullDate,
-        timeSent: timeSent
-      }
-      directMessagesData.push(message)
-    }
-    console.log(directMessagesData);
+    // for (var i = 0; i < data.length; i++) {
+    //   // Date format
+    //   const dateSent = data[i].created_at.substr(0, 10);
+    //   const yearSent = data[i].created_at.substr(26, 30);
+    //   const fullDate = dateSent + ' ' + yearSent;
+    //
+    //   // Time format
+    //   const timeSent = data[i].created_at.substr(11, 9);
+    //
+    //   const message = {
+    //     text: data[i].text,
+    //     profilPictureSender: data[i].sender.profile_image_url,
+    //     senderUsername: data[i].sender.screen_name,
+    //     fullDate: fullDate,
+    //     timeSent: timeSent
+    //   }
+    //   directMessagesData.push(message)
+    // }
     next(null, directMessagesData)
   });
 }
@@ -94,13 +94,14 @@ app.get('/', (req, res) => {
       [
         getProfil,
         recentTweets,
-        // recentFriends,
+        recentFriends,
         privateMessages,
       ], function(err, results) {
         const profilData = results[0];
         const TweetsData = results[1];
         const friendsData = results[2];
-        res.render('index', { profilData: profilData, TweetsData: TweetsData, friendsData: friendsData });
+        const privateMessagesData = results[3];
+        res.render('index', { profilData: profilData, TweetsData: TweetsData, friendsData: friendsData, privateMessagesData: privateMessagesData });
       }
     )
   }

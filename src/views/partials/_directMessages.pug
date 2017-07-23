@@ -1,21 +1,19 @@
 .grid-33
   .app--section
     ul.app--message--list
-      li
-        h3 Conversation with 
-          a Jill Spore
-        ul.app--message--conversation
-          li.app--message
-            .app--avatar(style="background-image: url(images/f-spore.png)")
-              img(src="images/f-spore.png")
-            
-            p.app--message--text How are things?
-            p.app--message--timestamp 3 hours ago
-          
-          li.app--message--me
-            .app--avatar(style="background-image: url(images/m-spore.png)")
-              img(src="images/m-spore.png")
-            
-            p.app--message--text Great! How about you? Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            p.app--message--timestamp 2 hours ago
-          
+      if(privateMessagesData.length !== 0)
+        each messages in privateMessagesData
+          li
+            h3 Private message from 
+              a= messages.senderUsername
+            ul.app--message--conversation
+              li.app--message
+                .app--avatar(style='background-image: url(' + messages.profilPictureSender + ')')
+                  img(src=messages.profilPictureSender)
+                
+                p.app--message--text= messages.text
+                p.app--message--timestamp= messages.timeSent
+                p.app--message--timestamp= messages.fullDate
+        
+      else
+        p You have no private messages, yet!
