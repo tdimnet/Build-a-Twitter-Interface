@@ -23,7 +23,7 @@ app.set('views', __dirname + '/views');
 
 // Take the username and profil picture of the declared user
 const getProfil = function getProfilInfo(next) {
-  twitter.get('account/verify_credentials', function(err, data, response) {
+  twitter.get('account/verify_credentials', (err, data, response) => {
     const username = data.screen_name;
     const profilPicture = data.profile_image_url;
     const followersCount = data.followers_count;
@@ -64,13 +64,26 @@ const recentFriends = function getRecentFriends(next) {
 
 const privateMessages = function getPrivateRecentMessages(next) {
   twitter.get('direct_messages', { count: 5 }, (err, data, response) => {
-    // console.log(data);
     const directMessagesData = [];
     for (var i = 0; i < data.length; i++) {
-      console.log(data[i].text);
-    }
+      // Date format
+      const dateSent = data[i].created_at.substr(0, 10);
+      const yearSent = data[i].created_at.substr(26, 30);
+      const fullDate = dateSent + ' ' + yearSent;
 
-    next(null, data)
+      // Time format
+      const timeSent = data[i].created_at.substr(11, 9);
+
+      const message = {
+        text: data[i].text,
+        profilPictureSender: data[i].sender.profile_image_url,
+        fullDate: fullDate,
+        timeSent: timeSent
+      }
+      directMessagesData.push(message)
+    }
+    console.log(directMessagesData);
+    next(null, directMessagesData)
   });
 }
 
@@ -81,7 +94,7 @@ app.get('/', (req, res) => {
       [
         getProfil,
         recentTweets,
-        recentFriends,
+        // recentFriends,
         privateMessages,
       ], function(err, results) {
         const profilData = results[0];
