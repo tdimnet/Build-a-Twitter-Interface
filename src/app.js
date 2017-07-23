@@ -108,6 +108,17 @@ app.get('/', (req, res) => {
 );
 
 
+// The error view
+app.get('/error', function (req, res) {
+    res.render('error');
+});
+
+// Handle 404 errors
+app.use('*', function(req, res) {
+    res.redirect('/error');
+});
+
+
 
 // Start server and watch for changes
 app.listen(3000, (
