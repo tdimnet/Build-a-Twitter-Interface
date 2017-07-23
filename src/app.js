@@ -27,12 +27,12 @@ const getProfil = function getProfilInfo(next) {
     const username = data.screen_name;
     const profilPicture = data.profile_image_url;
     const followersCount = data.followers_count;
-    const firstData = {
+    const profilData = {
       username: username,
       profilPicture: profilPicture,
       followersCount: followersCount
     };
-    next(null, firstData);
+    next(null, profilData);
   })
 }
 
@@ -48,7 +48,16 @@ const recentTweets = function getRecentTweets(next) {
 // Take the five latests recent friends of the user
 const recentFriends = function getRecentFriends(next) {
   twitter.get('followers/list', { count: 5 }, (err, data, response) => {
-    next(null, data.users)
+    const friendsData = [];
+    for (var i = 0; i < data.users.length; i++) {
+      const friends = {
+        realName: data.users[i].name,
+        screenName: data.users[i].screen_name,
+        profilPicture: data.users[i].profile_image_url
+      }
+      friendsData.push(friends);
+    }
+    next(null, friendsData)
   });
 }
 
@@ -68,11 +77,13 @@ app.get('/', (req, res) => {
       [
         getProfil,
         recentTweets,
-        // recentFriends,
+        recentFriends,
       ], function(err, results) {
         const profilData = results[0];
         const TweetsData = results[1];
-        res.render('index', { profilData: profilData, TweetsData: TweetsData });
+        const friendsData = results[2];
+        console.log(friendsData);
+        res.render('index', { profilData: profilData, TweetsData: TweetsData, friendsData: friendsData });
       }
     )
   }
