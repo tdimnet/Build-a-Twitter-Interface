@@ -61,28 +61,32 @@ const recentFriends = function getRecentFriends(next) {
   });
 }
 
-// Take the five latests private messages of the user
-const privateMessages = function getPrivateRecentMessages() {
-  twitter.get('direct_messages', { count: 5 }, function (err, data, response) {
-    // console.log(data)
+
+const privateMessages = function getPrivateRecentMessages(next) {
+  twitter.get('direct_messages', { count: 5 }, (err, data, response) => {
+    // console.log(data);
+    const directMessagesData = [];
+    for (var i = 0; i < data.length; i++) {
+      console.log(data[i].text);
+    }
+
+    next(null, data)
   });
 }
 
 
 // Match the home route
 app.get('/', (req, res) => {
-    var twitData = {};
-
     async.parallel(
       [
         getProfil,
         recentTweets,
         recentFriends,
+        privateMessages,
       ], function(err, results) {
         const profilData = results[0];
         const TweetsData = results[1];
         const friendsData = results[2];
-        console.log(friendsData);
         res.render('index', { profilData: profilData, TweetsData: TweetsData, friendsData: friendsData });
       }
     )
