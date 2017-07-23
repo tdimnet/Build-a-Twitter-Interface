@@ -6,12 +6,13 @@
           li
             .circle--fluid
               .circle--fluid--cell.circle--fluid--primary
-                a.app--tweet--author
+                a(href="https://twitter.com/" + user.screenName, target="_blank").app--tweet--author
                   .app--avatar(style='background-image: url(' + user.profilPicture + ')')
                     img(src=user.profilPicture)
                   
                   h4= user.realName
-                  p= user.screenName
+                  p @
+                    span= user.screenName
                   
       else
         p You have no friends, yet!
