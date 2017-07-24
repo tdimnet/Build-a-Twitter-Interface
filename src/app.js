@@ -2,6 +2,7 @@
 
 // Import statements
 const express = require('express');
+const bodyParser = require('body-parser');
 const async = require('async');
 const Twit = require('twit');
 const config = require('./config.js');
@@ -15,6 +16,7 @@ app.use(
   '/static',
   express.static(__dirname + '/public')
 );
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // setter statements in order to show the templating files
 app.set('view engine', 'pug');
@@ -110,13 +112,24 @@ app.get('/', (req, res) => {
 );
 
 
+app.post('/', (req, res, next) => {
+  if (req.body.tweet) {
+    twitter.post('statuses/update', { status: req.body.tweet }, (err, data, response) => {
+      res.redirect('/');
+    });
+  } else {
+    res.redirect('/');
+  }
+});
+
+
 // The error view
-app.get('/error', function (req, res) {
+app.get('/error', (req, res) => {
     res.render('error');
 });
 
 // Handle 404 errors
-app.use('*', function(req, res) {
+app.use('*', (req, res) => {
     res.redirect('/error');
 });
 
