@@ -111,12 +111,14 @@ app.get('/', (req, res) => {
   }
 );
 
-
+// Post a new tweet from the interface
 app.post('/', (req, res, next) => {
+  // If a tweet exists, fill in the status and then redirect
   if (req.body.tweet) {
     twitter.post('statuses/update', { status: req.body.tweet }, (err, data, response) => {
       res.redirect('/');
     });
+  // Otherwise redirect the user
   } else {
     res.redirect('/');
   }
