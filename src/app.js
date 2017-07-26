@@ -44,23 +44,28 @@ const getProfil = function getProfilInfo(next) {
 const recentTweets = function getRecentTweets(next) {
   twitter.get('statuses/user_timeline', { count: 5 }, (err, data, response) => {
 
-    // *tweets -message content -# of retweets -# of likes -date tweeted
-
-
     const tweetsData = [];
     for (var i = 0; i < data.length; i++) {
+
+
+      const dateSent = data[i].created_at.substr(0, 10);
+      const yearSent = data[i].created_at.substr(26, 30);
+      const fullDate = dateSent + ' ' + yearSent;
+
+
       const tweetInfo = {
         text: data[i].text,
-        created_at: data[i].created_at,
+        created_at: data[i].created_at.substr(0, 10),
         username: data[i].user.screen_name,
-        profilPicture: data[i].user.profile_image_url,
+        profilPicture: fullDate,
         retweets: data[i].retweet_count,
         like: data[i].favorite_count,
       }
       tweetsData.push(tweetInfo);
     }
 
-    console.log(tweetsData);
+    console.log(tweetsData[0]);
+
 
     next(null, tweetsData);
   });
@@ -88,9 +93,9 @@ const privateMessages = function getPrivateRecentMessages(next) {
     const directMessagesData = [];
     // for (var i = 0; i < data.length; i++) {
     //   // Date format
-    //   const dateSent = data[i].created_at.substr(0, 10);
-    //   const yearSent = data[i].created_at.substr(26, 30);
-    //   const fullDate = dateSent + ' ' + yearSent;
+      // const dateSent = data[i].created_at.substr(0, 10);
+      // const yearSent = data[i].created_at.substr(26, 30);
+      // const fullDate = dateSent + ' ' + yearSent;
     //
     //   // Time format
     //   const timeSent = data[i].created_at.substr(11, 9);
