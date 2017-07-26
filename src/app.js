@@ -43,9 +43,26 @@ const getProfil = function getProfilInfo(next) {
 // Retrieve the five latest tweets of the user
 const recentTweets = function getRecentTweets(next) {
   twitter.get('statuses/user_timeline', { count: 5 }, (err, data, response) => {
-    // console.log(data);
-    const TweetsData = data;
-    next(null, TweetsData);
+
+    // *tweets -message content -# of retweets -# of likes -date tweeted
+
+
+    const tweetsData = [];
+    for (var i = 0; i < data.length; i++) {
+      const tweetInfo = {
+        text: data[i].text,
+        created_at: data[i].created_at,
+        username: data[i].user.screen_name,
+        profilPicture: data[i].user.profile_image_url,
+        retweets: data[i].retweet_count,
+        like: data[i].favorite_count,
+      }
+      tweetsData.push(tweetInfo);
+    }
+
+    console.log(tweetsData);
+
+    next(null, tweetsData);
   });
 }
 
