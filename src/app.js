@@ -47,25 +47,23 @@ const recentTweets = function getRecentTweets(next) {
     const tweetsData = [];
     for (var i = 0; i < data.length; i++) {
 
-
       const dateSent = data[i].created_at.substr(0, 10);
       const yearSent = data[i].created_at.substr(26, 30);
       const fullDate = dateSent + ' ' + yearSent;
 
 
+      console.log(data[0]);
+
       const tweetInfo = {
         text: data[i].text,
-        created_at: data[i].created_at.substr(0, 10),
+        created_at: fullDate,
         username: data[i].user.screen_name,
-        profilPicture: fullDate,
+        profilPicture: data[i].user.profile_image_url,
         retweets: data[i].retweet_count,
         like: data[i].favorite_count,
       }
       tweetsData.push(tweetInfo);
     }
-
-    console.log(tweetsData[0]);
-
 
     next(null, tweetsData);
   });
